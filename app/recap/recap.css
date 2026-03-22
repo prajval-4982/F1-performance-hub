@@ -1,0 +1,253 @@
+/* app/recap/recap.css — Scroll-driven immersive season story */
+
+.recap-root {
+  background: #0a0a0a;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── TIMELINE SIDEBAR ── */
+.timeline-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  background: linear-gradient(to right, rgba(0,0,0,0.8), transparent);
+}
+
+.timeline-line {
+  position: absolute;
+  width: 1px;
+  top: 10vh;
+  bottom: 10vh;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.timeline-dots {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 2;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #333;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.timeline-dot.active {
+  transform: scale(1.5);
+  box-shadow: 0 0 15px currentColor;
+}
+
+.timeline-dot:hover {
+  background: #666;
+}
+
+/* ── MAIN CONTENT ── */
+.recap-main {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+.race-section {
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 10%;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  overflow: hidden;
+}
+
+.race-bg-outline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  opacity: 0.05;
+  filter: blur(1px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.race-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 900px;
+}
+
+.race-header {
+  margin-bottom: 40px;
+}
+
+.round-num {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lp-teal, #27F4D2);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.race-title {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0;
+  font-family: 'Manrope', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.race-location {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── CARDS ── */
+.recap-cards-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.winner-card-recap {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.winner-card-recap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: currentColor;
+}
+
+.win-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.5;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.win-name {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.win-team {
+  font-size: 18px;
+  opacity: 0.8;
+  margin: 8px 0 24px 0;
+}
+
+.win-time {
+  font-family: 'Inter', monospace;
+  font-size: 14px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  display: inline-block;
+}
+
+/* ── PODIUM & FL ── */
+.podium-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.podium-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  font-size: 15px;
+}
+
+.pod-pos {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tag-fl-purple {
+  background: #9b00ff;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-top: 24px;
+  display: inline-block;
+}
+
+.fl-info {
+  margin-top: 8px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .recap-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .timeline-sidebar {
+    width: 60px;
+  }
+  .recap-main {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+  }
+  .race-section {
+    padding: 0 5%;
+  }
+}
