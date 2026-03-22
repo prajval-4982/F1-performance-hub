@@ -333,6 +333,64 @@ body {
 .empty-icon { font-size: 26px; }
 .empty-state p { color: var(--text-3); font-size: 12px; text-align: center; line-height: 1.6; }
 .loading-msg   { padding: 14px 0; color: var(--text-3); font-size: 12px; text-align: center; }
+
+/* Skeleton Loaders */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 4px;
+  border-bottom: 1px solid rgba(100, 100, 180, 0.08);
+}
+
+.skeleton-item {
+  border-radius: var(--r-sm);
+}
+
+.skel-pos { width: 18px; height: 14px; margin-left: auto; }
+.skel-dot { width: 10px; height: 10px; border-radius: 50%; }
+.skel-name { width: 120px; height: 16px; }
+.skel-team { width: 60px; height: 12px; }
+.skel-bar { width: 80px; height: 5px; border-radius: 3px; }
+.skel-pts { width: 24px; height: 16px; margin-left: auto; }
+
+.error-state {
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border-left: 3px solid var(--red);
+  background: rgba(40, 10, 10, 0.3);
+  border-radius: var(--r-md);
+}
+
+.retry-btn {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.retry-btn:hover { transform: scale(1.05); }
 .error-msg     { padding: 10px 0; color: #f08080; font-size: 12px; }
 
 /* Speed bars (track detail) */

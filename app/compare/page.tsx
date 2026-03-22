@@ -2,6 +2,7 @@
 
 import { RADAR_TEAMS, ATTR_LABELS, CAR_DIFFS } from '@/data/radar';
 import Link from 'next/link';
+import D3RadarChart from '@/components/compare/D3RadarChart';
 
 export default function ComparePage() {
     return (
@@ -14,7 +15,7 @@ export default function ComparePage() {
                 <div className="col-main">
                     <div className="card">
                         <p className="sec-label">Car attribute radar — estimated from 2026 race data</p>
-                        <RadarChart />
+                        <D3RadarChart />
                         <div className="radar-legend">
                             {RADAR_TEAMS.map(t => (
                                 <div key={t.name} className="rleg-item">
@@ -44,71 +45,6 @@ export default function ComparePage() {
                 </div>
             </div>
         </section>
-    );
-}
-
-function RadarChart() {
-    const cx = 150, cy = 148, R = 90;
-    const N = ATTR_LABELS.length;
-    const ang = ATTR_LABELS.map((_, i) => (i * 2 * Math.PI) / N - Math.PI / 2);
-
-    return (
-        <svg className="radar-svg" viewBox="0 0 300 280">
-            {/* Grid rings */}
-            {[0.2, 0.4, 0.6, 0.8, 1].map(r => (
-                <polygon
-                    key={r}
-                    points={ang
-                        .map(a => `${cx + R * r * Math.cos(a)},${cy + R * r * Math.sin(a)}`)
-                        .join(' ')}
-                    fill="none"
-                    stroke="#1e1e38"
-                    strokeWidth="0.5"
-                />
-            ))}
-
-            {/* Spokes + labels */}
-            {ang.map((a, i) => {
-                const tx = cx + (R + 14) * Math.cos(a);
-                const ty = cy + (R + 14) * Math.sin(a);
-                return (
-                    <g key={i}>
-                        <line
-                            x1={cx} y1={cy}
-                            x2={cx + R * Math.cos(a)} y2={cy + R * Math.sin(a)}
-                            stroke="#1e1e38" strokeWidth="0.5"
-                        />
-                        <text
-                            x={tx} y={ty + 4}
-                            textAnchor="middle" fill="#2a2a4a" fontSize="8.5"
-                            fontFamily="Rajdhani, sans-serif"
-                        >
-                            {ATTR_LABELS[i]}
-                        </text>
-                    </g>
-                );
-            })}
-
-            {/* Team polygons */}
-            {RADAR_TEAMS.map(team => {
-                const pts = ang
-                    .map(
-                        (a, i) =>
-                            `${cx + R * (team.attrs[i] / 100) * Math.cos(a)},${cy + R * (team.attrs[i] / 100) * Math.sin(a)
-                            }`
-                    )
-                    .join(' ');
-                return (
-                    <polygon
-                        key={team.name}
-                        points={pts}
-                        fill={team.color + '22'}
-                        stroke={team.color}
-                        strokeWidth="1.5"
-                    />
-                );
-            })}
-        </svg>
     );
 }
 

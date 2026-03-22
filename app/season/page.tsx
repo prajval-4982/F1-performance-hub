@@ -13,6 +13,8 @@ import { teamColor, FLAG_MAP, TEAMS_2026, REG_NOTES_2026, NAT_MAP } from '@/lib/
 import type { DriverStanding, ConstructorStanding, Race } from '@/lib/types';
 import TyreStrategy from '@/components/season/TyreStrategy';
 import RaceWeather from '@/components/season/RaceWeather';
+import StandingsSkeleton from '@/components/season/StandingsSkeleton';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type SubTab = 'standings' | 'results' | 'schedule' | 'teams' | 'strategy';
 
@@ -26,8 +28,9 @@ export default function SeasonPage() {
     const [raceResult, setRaceResult] = useState<Race | null>(null);
     const [apiStatus, setApiStatus] = useState<'connecting' | 'ok' | 'err'>('connecting');
 
-    useEffect(() => {
-        async function load() {
+    const load = useCallback(async () => {
+        setApiStatus('connecting');
+        try {
             const [drv, ctor, sched, results] = await Promise.all([
                 getDriverStandings(),
                 getConstructorStandings(),
@@ -51,9 +54,15 @@ export default function SeasonPage() {
                 const lastRace = await getRaceResult(lastRound);
                 if (lastRace) setRaceResult(lastRace);
             }
+        } catch (e) {
+            console.error('Failed to load season data:', e);
+            setApiStatus('err');
         }
-        load();
     }, []);
+
+    useEffect(() => {
+        load();
+    }, [load]);
 
     const loadRace = useCallback(async (round: string) => {
         setSelectedRound(round);
@@ -117,68 +126,136 @@ export default function SeasonPage() {
                                         </span>
                                     )}
                                 </div>
-                                {!drvStandings.length ? (
-                                    <div className="loading-msg">Fetching live standings…</div>
-                                ) : (
-                                    drvStandings.map((d, i) => {
-                                        const c = teamColor(d.Constructors?.[0]?.constructorId);
-                                        const max = +drvStandings[0].points;
-                                        const pct = Math.round((+d.points / max) * 100);
-                                        return (
-                                            <div key={d.Driver.driverId} className="row-standings">
-                                                <span className="row-pos">{d.position}</span>
-                                                <div className="tdot" style={{ background: c }} />
-                                                <span className="row-name" style={{ fontWeight: i < 3 ? 600 : 400 }}>
-                                                    {NAT_MAP[d.Driver.nationality] || '🏁'} {d.Driver.givenName} {d.Driver.familyName}
-                                                </span>
-                                                <span style={{ fontSize: '11px', color: 'var(--text-2)' }}>
-                                                    {d.Constructors?.[0]?.name ?? ''}
-                                                </span>
-                                                <div className="bar-pts">
-                                                    <div className="pts-fill" style={{ width: `${pct}%`, background: c }} />
-                                                </div>
-                                                <span
-                                                    className="row-pts"
-                                                    style={{ color: i < 3 ? c : 'var(--text-2)' }}
-                                                >
-                                                    {d.points}
-                                                </span>
-                                            </div>
-                                        );
-                                    })
-                                )}
+
+                                <AnimatePresence mode="wait">
+                                    {apiStatus === 'err' ? (
+                                        <motion.div
+                                            key="error"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="error-state"
+                                        >
+                                            <p style={{ margin: 0 }}>Failed to load standings. Try again.</p>
+                                            <button className="retry-btn" onClick={load}>Retry</button>
+                                        </motion.div>
+                                    ) : !drvStandings.length ? (
+                                        <motion.div
+                                            key="skeleton"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <StandingsSkeleton type="drivers" />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="data"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            {drvStandings.map((d, i) => {
+                                                const c = teamColor(d.Constructors?.[0]?.constructorId);
+                                                const max = +drvStandings[0].points;
+                                                const pct = Math.round((+d.points / max) * 100);
+                                                return (
+                                                    <motion.div
+                                                        key={d.Driver.driverId}
+                                                        className="row-standings"
+                                                        initial={{ opacity: 0, x: -10 }}
+                                                        animate={{ opacity: 1, x: 0 }}
+                                                        transition={{ delay: i * 0.03, duration: 0.3 }}
+                                                    >
+                                                        <span className="row-pos">{d.position}</span>
+                                                        <div className="tdot" style={{ background: c }} />
+                                                        <span className="row-name" style={{ fontWeight: i < 3 ? 600 : 400 }}>
+                                                            {NAT_MAP[d.Driver.nationality] || '🏁'} {d.Driver.givenName} {d.Driver.familyName}
+                                                        </span>
+                                                        <span style={{ fontSize: '11px', color: 'var(--text-2)' }}>
+                                                            {d.Constructors?.[0]?.name ?? ''}
+                                                        </span>
+                                                        <div className="bar-pts">
+                                                            <div className="pts-fill" style={{ width: `${pct}%`, background: c }} />
+                                                        </div>
+                                                        <span
+                                                            className="row-pts"
+                                                            style={{ color: i < 3 ? c : 'var(--text-2)' }}
+                                                        >
+                                                            {d.points}
+                                                        </span>
+                                                    </motion.div>
+                                                );
+                                            })}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </div>
                         <div className="col-side">
                             <div className="card">
                                 <p className="sec-label">Constructors</p>
-                                {!ctorStandings.length ? (
-                                    <div className="loading-msg">Loading…</div>
-                                ) : (
-                                    ctorStandings.map((c, i) => {
-                                        const col = teamColor(c.Constructor.constructorId);
-                                        const max = +ctorStandings[0].points;
-                                        const pct = Math.round((+c.points / max) * 100);
-                                        return (
-                                            <div key={c.Constructor.constructorId} className="row-standings">
-                                                <span className="row-pos">{c.position}</span>
-                                                <div className="tdot" style={{ background: col }} />
-                                                <span className="row-name" style={{ fontWeight: i < 2 ? 600 : 400 }}>
-                                                    {c.Constructor.name}
-                                                </span>
-                                                <div className="bar-pts">
-                                                    <div className="pts-fill" style={{ width: `${pct}%`, background: col }} />
-                                                </div>
-                                                <span
-                                                    className="row-pts"
-                                                    style={{ color: i < 2 ? col : 'var(--text-2)' }}
-                                                >
-                                                    {c.points}
-                                                </span>
-                                            </div>
-                                        );
-                                    })
-                                )}
+                                <AnimatePresence mode="wait">
+                                    {apiStatus === 'err' ? (
+                                        <motion.div
+                                            key="error"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="error-state"
+                                        >
+                                            <p style={{ margin: 0 }}>API Error</p>
+                                        </motion.div>
+                                    ) : !ctorStandings.length ? (
+                                        <motion.div
+                                            key="skeleton"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <StandingsSkeleton type="constructors" />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="data"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            {ctorStandings.map((c, i) => {
+                                                const col = teamColor(c.Constructor.constructorId);
+                                                const max = +ctorStandings[0].points;
+                                                const pct = Math.round((+c.points / max) * 100);
+                                                return (
+                                                    <motion.div
+                                                        key={c.Constructor.constructorId}
+                                                        className="row-standings"
+                                                        initial={{ opacity: 0, x: 10 }}
+                                                        animate={{ opacity: 1, x: 0 }}
+                                                        transition={{ delay: i * 0.03, duration: 0.3 }}
+                                                    >
+                                                        <span className="row-pos">{c.position}</span>
+                                                        <div className="tdot" style={{ background: col }} />
+                                                        <span className="row-name" style={{ fontWeight: i < 2 ? 600 : 400 }}>
+                                                            {c.Constructor.name}
+                                                        </span>
+                                                        <div className="bar-pts">
+                                                            <div className="pts-fill" style={{ width: `${pct}%`, background: col }} />
+                                                        </div>
+                                                        <span
+                                                            className="row-pts"
+                                                            style={{ color: i < 2 ? col : 'var(--text-2)' }}
+                                                        >
+                                                            {c.points}
+                                                        </span>
+                                                    </motion.div>
+                                                );
+                                            })}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
                             {leader && (
                                 <div className="card leader-card" style={{ borderColor: leaderColor + '44' }}>
