@@ -40,7 +40,7 @@ export default function RootLayout({
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Rajdhani:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;700&family=Manrope:wght@700;800&display=swap"
         />
         <link rel="icon" href="/hero-car.png" />
         <link rel="manifest" href="/manifest.json" />

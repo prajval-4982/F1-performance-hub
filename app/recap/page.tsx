@@ -1,11 +1,9 @@
-'use client';
-
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { getAllResults, getSchedule } from '@/lib/api';
-import { teamColor, FLAG_MAP, NAT_MAP } from '@/lib/constants';
+import { teamColor, FLAG_MAP } from '@/lib/constants';
 import { TRACKS } from '@/data/tracks';
-import type { Race, RaceResult } from '@/lib/types';
+import type { Race } from '@/lib/types';
 import './recap.css';
 
 /* ── HELPERS ── */
@@ -26,6 +24,8 @@ function getTrackKey(raceName: string): string {
 
 /* ── COMPONENTS ── */
 
+const SCROLL_THRESHOLD = 0.5; // Trigger half-way into view
+
 function RaceSection({ 
     race, 
     index, 
@@ -36,7 +36,7 @@ function RaceSection({
     onVisible: (idx: number, color: string) => void 
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { amount: 0.5 });
+  const isInView = useInView(ref, { amount: SCROLL_THRESHOLD });
   const winner = race.Results?.[0];
   const color = winner ? teamColor(winner.Constructor.constructorId) : '#27F4D2';
 
@@ -56,6 +56,11 @@ function RaceSection({
     if (points.length === 0) return '';
     return `M ${points[0][0]} ${points[0][1]} ${points.slice(1).map(p => `L ${p[0]} ${p[1]}`).join(' ')} Z`;
   }, [trackData]);
+
+  const fastestLap = useMemo(() => 
+    race.Results?.find(r => r.FastestLap?.rank === '1'),
+    [race.Results]
+  );
 
   return (
     <section ref={ref} className="race-section" style={{ opacity: isInView ? 1 : 0.3, transition: 'opacity 0.6s ease' }}>
@@ -124,21 +129,16 @@ function RaceSection({
             </div>
 
             {/* Fastest Lap */}
-            {race.Results?.find(r => r.FastestLap?.rank === '1') && (
+            {fastestLap && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                 transition={{ delay: 0.8 }}
               >
                 <div className="tag-fl-purple">Fastest Lap</div>
-                {(() => {
-                  const fl = race.Results?.find(r => r.FastestLap?.rank === '1');
-                  return fl ? (
-                    <p className="fl-info">
-                      {fl.Driver.familyName} — {fl.FastestLap?.Time?.time || ''}
-                    </p>
-                  ) : null;
-                })()}
+                <p className="fl-info">
+                  {fastestLap.Driver.familyName} — {fastestLap.FastestLap?.Time?.time || ''}
+                </p>
               </motion.div>
             )}
           </div>
@@ -152,32 +152,48 @@ export default function SeasonRecap() {
   const [races, setRaces] = useState<Race[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [activeColor, setActiveColor] = useState('#27F4D2');
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<'loading' | 'ok' | 'err'>('loading');
+
+  const handleVisible = useCallback((idx: number, color: string) => {
+    setActiveIdx(idx);
+    setActiveColor(color);
+  }, []);
 
   useEffect(() => {
     async function loadData() {
       try {
-        // We get ALL results to show completed races
         const all = await getAllResults();
         if (all && all.length > 0) {
           setRaces(all);
+          setStatus('ok');
         } else {
-          // Fallback to schedule if results empty
+          // Fallback to schedule to at least show upcoming races if no results
           const sched = await getSchedule();
-          setRaces(sched.slice(0, 5)); // Mock some if needed
+          if (sched && sched.length > 0) {
+            setRaces(sched.slice(0, 5));
+            setStatus('ok');
+          } else {
+            setStatus('err');
+          }
         }
       } catch (e) {
-          console.error(e);
-      } finally {
-        setLoading(false);
+          console.error('[Recap] Load failed:', e);
+          setStatus('err');
       }
     }
     loadData();
   }, []);
 
-  if (loading) return (
+  if (status === 'loading') return (
     <div className="recap-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="loading-msg">Loading Season Story…</div>
+    </div>
+  );
+
+  if (status === 'err') return (
+    <div className="recap-root" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
+      <p style={{ opacity: 0.6 }}>Failed to load season data.</p>
+      <button className="pill-btn" onClick={() => window.location.reload()}>Retry</button>
     </div>
   );
 
@@ -208,10 +224,7 @@ export default function SeasonRecap() {
             <RaceSection 
                 race={race} 
                 index={i} 
-                onVisible={(idx, color) => {
-                    setActiveIdx(idx);
-                    setActiveColor(color);
-                }} 
+                onVisible={handleVisible} 
             />
           </div>
         ))}

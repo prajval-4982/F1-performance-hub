@@ -24,6 +24,13 @@
   background: linear-gradient(to right, rgba(0,0,0,0.8), transparent);
 }
 
+.tdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 .timeline-line {
   position: absolute;
   width: 1px;
