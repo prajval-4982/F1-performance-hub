@@ -15,13 +15,15 @@ export default function LandingNav() {
   return (
     <nav className={`landing-nav${scrolled ? " landing-nav--scrolled" : ""}`}>
       <Link href="/" className="nav-logo">
-        <div className="nav-flag">🏎️</div>
+        <div className="nav-flag" style={{ background: 'none', boxShadow: 'none' }}>
+          <Image src="/logo.png" alt="F1 Logo" width={30} height={18} style={{ objectFit: 'contain' }} />
+        </div>
         F1 HUB
       </Link>
       <div className="nav-links">
         <a href="#features">Features</a>
         <a href="#tracks">Tracks</a>
-        <Link href="/recap" style={{ color: 'var(--lp-teal)', fontWeight: 600 }}>Recap</Link>
+        <Link href="/recap">Recap</Link>
         <a href="#standings">Standings</a>
         <a href="#data">Data</a>
       </div>

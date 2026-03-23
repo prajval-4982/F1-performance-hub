@@ -2,10 +2,9 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { getAllResults, getSchedule } from '@/lib/api';
-import { teamColor, FLAG_MAP } from '@/lib/constants';
+import { teamColor } from '@/lib/constants';
 import { TRACKS } from '@/data/tracks';
-import type { Race } from '@/lib/types';
+import { SEASON_2026, completedRaces } from '@/lib/season2026';
 import './recap.css';
 
 /* ── HELPERS ── */
@@ -26,21 +25,20 @@ function getTrackKey(raceName: string): string {
 
 /* ── COMPONENTS ── */
 
-const SCROLL_THRESHOLD = 0.5; // Trigger half-way into view
+const SCROLL_THRESHOLD = 0.5;
 
 function RaceSection({ 
     race, 
     index, 
     onVisible 
 }: { 
-    race: Race; 
+    race: any; 
     index: number; 
     onVisible: (idx: number, color: string) => void 
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { amount: SCROLL_THRESHOLD });
-  const winner = race.Results?.[0];
-  const color = winner ? teamColor(winner.Constructor.constructorId) : '#27F4D2';
+  const color = race.winner ? teamColor(race.winner.team.toLowerCase().replace(/\s+/g, '_')) : '#27F4D2';
 
   useEffect(() => {
     if (isInView) {
@@ -48,10 +46,9 @@ function RaceSection({
     }
   }, [isInView, index, color, onVisible]);
 
-  const trackKey = getTrackKey(race.raceName);
+  const trackKey = getTrackKey(race.name);
   const trackData = trackKey ? TRACKS[trackKey] : null;
 
-  // Flatten track points for a simple background SVG
   const pathData = useMemo(() => {
     if (!trackData) return '';
     const points = trackData.segments.flatMap(s => s.pts);
@@ -59,14 +56,8 @@ function RaceSection({
     return `M ${points[0][0]} ${points[0][1]} ${points.slice(1).map(p => `L ${p[0]} ${p[1]}`).join(' ')} Z`;
   }, [trackData]);
 
-  const fastestLap = useMemo(() => 
-    race.Results?.find(r => r.FastestLap?.rank === '1'),
-    [race.Results]
-  );
-
   return (
-    <section ref={ref} className="race-section" style={{ opacity: isInView ? 1 : 0.3, transition: 'opacity 0.6s ease' }}>
-      {/* Background SVG Outline */}
+    <section id={`race-${race.round}`} ref={ref} className="race-section" style={{ opacity: isInView ? 1 : 0.3, transition: 'opacity 0.6s ease' }}>
       {pathData && (
         <svg className="race-bg-outline" viewBox="0 0 900 520">
           <motion.path 
@@ -88,58 +79,59 @@ function RaceSection({
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="race-header">
-          <span className="round-num">Round {race.round}</span>
-          <h2 className="race-title">{race.raceName}</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span className="round-num">Round {race.round}</span>
+            {race.sprint && <span className="tag tag-sprint" style={{ background: 'var(--lp-orange)', color: '#000', fontWeight: 800, fontSize: '10px', padding: '2px 8px', borderRadius: '4px' }}>SPRINT</span>}
+          </div>
+          <h2 className="race-title">{race.name} {race.flag}</h2>
           <div className="race-location">
-            <span>{FLAG_MAP[race.Circuit.Location.country] || '🏁'} {race.Circuit.Location.locality}, {race.Circuit.Location.country}</span>
+            <span>{race.circuit}, {race.country}</span>
           </div>
         </div>
 
         <div className="recap-cards-grid">
-          {/* Winner Card */}
-          {winner && (
+          {race.winner && (
             <motion.div 
-              className="winner-card-recap" 
+              className="card winner-card-recap" 
               style={{ color }}
               initial={{ x: 100, opacity: 0 }}
               animate={isInView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
               transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <span className="win-label">Race Winner</span>
-              <h3 className="win-name">{winner.Driver.givenName} {winner.Driver.familyName}</h3>
-              <p className="win-team">{winner.Constructor.name}</p>
-              <div className="win-time">{winner.Time?.time || 'Finished'}</div>
+              <h3 className="win-name">{race.winner.driver}</h3>
+              <p className="win-team">{race.winner.team}</p>
+              <div className="win-time">{race.winner.time}</div>
             </motion.div>
           )}
 
-          {/* Podium & Fastest Lap */}
           <div className="podium-wrap">
             <div className="podium-list">
-              {(race.Results || []).slice(0, 3).map((result, i) => (
+              {(race.podium || []).map((result: any, i: number) => (
                 <motion.div 
-                  key={result.Driver.driverId}
-                  className="podium-item"
+                  key={result.driver}
+                  className="card podium-item"
                   initial={{ opacity: 0, x: 20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
                   transition={{ delay: 0.4 + (i * 0.1), duration: 0.5 }}
                 >
-                  <span className="pod-pos">{i + 1}</span>
-                  <div className="tdot" style={{ background: teamColor(result.Constructor.constructorId) }} />
-                  <span>{result.Driver.familyName}</span>
+                  <span className="pod-pos">{result.pos}</span>
+                  <div className="tdot" style={{ background: teamColor(result.team.toLowerCase().replace(/\s+/g, '_')) }} />
+                  <span style={{ fontWeight: 600 }}>{result.driver.split(' ').pop()}</span>
                 </motion.div>
               ))}
             </div>
 
-            {/* Fastest Lap */}
-            {fastestLap && (
+            {race.fastestLap && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                 transition={{ delay: 0.8 }}
+                style={{ marginTop: '24px' }}
               >
-                <div className="tag-fl-purple">Fastest Lap</div>
+                <div className="tag tag-fl">Fastest Lap</div>
                 <p className="fl-info">
-                  {fastestLap.Driver.familyName} — {fastestLap.FastestLap?.Time?.time || ''}
+                  {race.fastestLap.driver} — {race.fastestLap.time}
                 </p>
               </motion.div>
             )}
@@ -151,84 +143,53 @@ function RaceSection({
 }
 
 export default function SeasonRecap() {
-  const [races, setRaces] = useState<Race[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [activeColor, setActiveColor] = useState('#27F4D2');
-  const [status, setStatus] = useState<'loading' | 'ok' | 'err'>('loading');
 
   const handleVisible = useCallback((idx: number, color: string) => {
     setActiveIdx(idx);
     setActiveColor(color);
   }, []);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const all = await getAllResults();
-        if (all && all.length > 0) {
-          setRaces(all);
-          setStatus('ok');
-        } else {
-          // Fallback to schedule to at least show upcoming races if no results
-          const sched = await getSchedule();
-          if (sched && sched.length > 0) {
-            setRaces(sched.slice(0, 5));
-            setStatus('ok');
-          } else {
-            setStatus('err');
-          }
-        }
-      } catch (e) {
-          console.error('[Recap] Load failed:', e);
-          setStatus('err');
-      }
-    }
-    loadData();
-  }, []);
-
-  if (status === 'loading') return (
-    <div className="recap-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div className="loading-msg">Loading Season Story…</div>
-    </div>
-  );
-
-  if (status === 'err') return (
-    <div className="recap-root" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
-      <p style={{ opacity: 0.6 }}>Failed to load season data.</p>
-      <button className="pill-btn" onClick={() => window.location.reload()}>Retry</button>
-    </div>
-  );
-
   return (
-    <div className="recap-root">
-      {/* Sidebar Timeline */}
+    <div className="recap-root pane-in">
       <aside className="timeline-sidebar">
         <div className="timeline-line" />
         <div className="timeline-dots">
-          {races.map((r, i) => (
-            <div 
-              key={r.round} 
-              className={`timeline-dot ${i === activeIdx ? 'active' : ''}`}
-              style={{ 
-                color: i === activeIdx ? activeColor : 'rgba(255,255,255,0.2)' 
-              }}
-              onClick={() => {
-                document.getElementById(`race-${r.round}`)?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            />
-          ))}
+          {SEASON_2026.races.map((r, i) => {
+            const isCompleted = r.completed;
+            const isCurrent = i === activeIdx;
+            const dotColor = isCompleted 
+                ? teamColor(r.winner!.team.toLowerCase().replace(/\s+/g, '_'))
+                : undefined;
+
+            return (
+              <div 
+                key={r.round} 
+                className={`timeline-dot ${isCurrent ? 'active' : ''} ${!isCompleted ? 'upcoming' : ''}`}
+                style={{ 
+                  color: isCurrent ? activeColor : dotColor,
+                  background: isCurrent ? 'currentColor' : undefined
+                }}
+                onClick={() => {
+                  if (isCompleted) {
+                    document.getElementById(`race-${r.round}`)?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              />
+            );
+          })}
         </div>
       </aside>
 
       <main className="recap-main">
-        {races.map((race, i) => (
-          <div key={race.round} id={`race-${race.round}`}>
-            <RaceSection 
-                race={race} 
-                index={i} 
-                onVisible={handleVisible} 
-            />
-          </div>
+        {completedRaces.map((race, i) => (
+          <RaceSection 
+              key={race.round}
+              race={race} 
+              index={i} 
+              onVisible={handleVisible} 
+          />
         ))}
       </main>
     </div>

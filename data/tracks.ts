@@ -20,62 +20,93 @@ export interface TrackData {
 
 export const TRACKS: Record<string, TrackData> = {
 
-    monza: {
-        name: 'Autodromo Nazionale di Monza', country: 'Italy',
+    
+    australia: {
+        name: 'Albert Park Circuit', country: 'Australia',
         segments: [
             {
-                id: 's1', label: 'S1', name: 'Main Straight', type: 'straight',
-                desc: 'Pit straight — DRS zone 1, peak speed sector',
-                speeds: { mercedes: 338, ferrari: 344, mclaren: 348, redbull: 342 },
-                pts: [[82, 150], [200, 150], [330, 150], [450, 150], [500, 150]], lp: [290, 128], la: 'middle'
+                id: 'aus_s1', label: 'S1', name: 'Start/Finish Straight', type: 'straight',
+                desc: 'Pit straight alongside the lake — DRS zone, 310 km/h approach into T1',
+                speeds: { mercedes: 308, ferrari: 305, mclaren: 315, redbull: 298 },
+                pts: [[553, 100], [553, 168], [552, 245], [548, 318]], lp: [578, 205], la: 'start'
             },
             {
-                id: 't12', label: 'T1-T2', name: 'Variante del Rettifilo', type: 'corner',
-                desc: 'First chicane — heaviest braking zone, 340 to 85 km/h',
-                speeds: { mercedes: 86, ferrari: 88, mclaren: 82, redbull: 85 },
-                pts: [[500, 150], [536, 150], [556, 156], [561, 173], [555, 190], [534, 194], [514, 194], [505, 210], [510, 230], [531, 238], [562, 240]], lp: [608, 194], la: 'start'
+                id: 'aus_t12', label: 'T1-T2', name: 'Turns 1-2 Chicane', type: 'corner',
+                desc: 'Opening chicane — heavy braking from 310 km/h, right then sharp left',
+                speeds: { mercedes: 88, ferrari: 92, mclaren: 82, redbull: 86 },
+                pts: [[548, 318], [562, 352], [572, 382], [568, 410], [548, 428], [518, 435], [488, 428], [462, 412]], lp: [612, 378], la: 'start'
             },
             {
-                id: 't3', label: 'T3', name: 'Curva Grande', type: 'corner',
-                desc: 'Sweeping high-speed right hander at ~265 km/h',
-                speeds: { mercedes: 272, ferrari: 263, mclaren: 258, redbull: 268 },
-                pts: [[562, 240], [596, 270], [630, 308], [656, 348], [668, 390]], lp: [716, 300], la: 'start'
+                id: 'aus_t36', label: 'T3-T6', name: 'Lakeside Complex', type: 'corner',
+                desc: 'Fast flowing sequence alongside the lake — taken near flat, big commitment from drivers',
+                speeds: { mercedes: 192, ferrari: 182, mclaren: 178, redbull: 188 },
+                pts: [[462, 412], [422, 420], [382, 420], [338, 412], [302, 392], [275, 362], [262, 328]], lp: [318, 442], la: 'middle'
             },
             {
-                id: 't45', label: 'T4-T5', name: 'Variante Roggia', type: 'corner',
-                desc: 'Second chicane — entry from Curva Grande at speed',
-                speeds: { mercedes: 89, ferrari: 95, mclaren: 87, redbull: 91 },
-                pts: [[668, 390], [679, 410], [697, 422], [710, 440], [701, 454], [680, 459], [660, 463]], lp: [750, 437], la: 'start'
+                id: 'aus_t78', label: 'T7-T8', name: 'Western Straight', type: 'straight',
+                desc: 'Park-side run through the western grounds — medium speed into T9 chicane',
+                speeds: { mercedes: 268, ferrari: 262, mclaren: 272, redbull: 255 },
+                pts: [[262, 328], [258, 292], [260, 258], [268, 225], [282, 198], [302, 175]], lp: [228, 262], la: 'end'
             },
             {
-                id: 't6', label: 'T6', name: 'Lesmo 1', type: 'corner',
-                desc: 'Fast right-hander through the wooded section',
-                speeds: { mercedes: 220, ferrari: 215, mclaren: 209, redbull: 224 },
-                pts: [[660, 463], [628, 471], [600, 465], [576, 451], [567, 445]], lp: [636, 494], la: 'middle'
+                id: 'aus_t910', label: 'T9-T10', name: 'Turns 9-10 Chicane', type: 'corner',
+                desc: 'DRS detection chicane — key overtaking setup zone, tight left-right sequence',
+                speeds: { mercedes: 135, ferrari: 140, mclaren: 128, redbull: 132 },
+                pts: [[302, 175], [338, 160], [378, 152], [418, 152], [455, 158], [482, 175], [498, 200]], lp: [390, 132], la: 'middle'
             },
             {
-                id: 't7', label: 'T7', name: 'Lesmo 2', type: 'corner',
-                desc: 'Tighter second Lesmo — high mechanical grip demand',
-                speeds: { mercedes: 197, ferrari: 192, mclaren: 187, redbull: 201 },
-                pts: [[567, 445], [547, 453], [527, 462], [507, 468]], lp: [522, 494], la: 'middle'
+                id: 'aus_t1114', label: 'T11-T14', name: 'Northern Complex', type: 'corner',
+                desc: 'Tricky technical sequence — car balance setup critical, drivers flag kerb issues',
+                speeds: { mercedes: 202, ferrari: 192, mclaren: 185, redbull: 195 },
+                pts: [[498, 200], [508, 228], [508, 258], [495, 282], [472, 296], [442, 302], [408, 296], [378, 282], [355, 260], [342, 235], [340, 208], [348, 182], [362, 162]], lp: [530, 252], la: 'start'
             },
             {
-                id: 's2', label: 'S2', name: 'Rettifilo Sud', type: 'straight',
-                desc: 'Back straight — DRS zone 2, second top-speed measurement',
-                speeds: { mercedes: 330, ferrari: 337, mclaren: 343, redbull: 335 },
-                pts: [[507, 468], [420, 471], [330, 471], [240, 470], [165, 467]], lp: [330, 492], la: 'middle'
+                id: 'aus_t1516', label: 'T15-T16', name: 'Final Corners', type: 'corner',
+                desc: 'Final chicane onto pit straight — slow exit, but sets up the whole next lap',
+                speeds: { mercedes: 155, ferrari: 160, mclaren: 148, redbull: 152 },
+                pts: [[362, 162], [395, 148], [432, 138], [470, 135], [508, 138], [535, 148], [550, 105], [553, 100]], lp: [460, 118], la: 'middle'
+            },
+        ]
+    },
+
+    china: {
+        name: 'Shanghai International Circuit', country: 'China',
+        segments: [
+            {
+                id: 'sha_s1', label: 'S1', name: 'Start/Finish Straight', type: 'straight',
+                desc: '2nd longest F1 straight at 1.175 km — DRS zone 1, 330+ km/h at speed trap',
+                speeds: { mercedes: 328, ferrari: 332, mclaren: 338, redbull: 318 },
+                pts: [[82, 385], [200, 385], [340, 385], [478, 385], [545, 375]], lp: [310, 365], la: 'middle'
             },
             {
-                id: 't810', label: 'T8-T10', name: 'Variante Ascari', type: 'corner',
-                desc: 'Fast chicane sequence — complex rhythm and balance',
-                speeds: { mercedes: 175, ferrari: 183, mclaren: 174, redbull: 177 },
-                pts: [[165, 467], [140, 462], [122, 447], [118, 422], [128, 402], [149, 391], [169, 387], [183, 370], [178, 352]], lp: [60, 430], la: 'end'
+                id: 'sha_t12', label: 'T1-T2', name: 'Turns 1-2 Hairpin', type: 'corner',
+                desc: 'Signature Shanghai hairpin — very slow apex, enormous braking zone, DRS overtake zone',
+                speeds: { mercedes: 72, ferrari: 76, mclaren: 65, redbull: 70 },
+                pts: [[545, 375], [582, 352], [608, 312], [615, 262], [602, 218], [572, 190], [530, 178], [488, 178], [450, 188], [422, 210]], lp: [648, 290], la: 'start'
             },
             {
-                id: 't11', label: 'T11', name: 'Curva Parabolica', type: 'corner',
-                desc: 'Long sweeping final corner — exit speed feeds main straight',
-                speeds: { mercedes: 163, ferrari: 151, mclaren: 147, redbull: 155 },
-                pts: [[178, 352], [163, 310], [139, 269], [112, 229], [90, 193], [82, 167], [82, 150]], lp: [30, 265], la: 'end'
+                id: 'sha_esses', label: 'T3-T6', name: 'Esses Section', type: 'corner',
+                desc: 'Flowing S-curves — aero efficiency critical, medium speed ~190 km/h',
+                speeds: { mercedes: 198, ferrari: 188, mclaren: 182, redbull: 195 },
+                pts: [[422, 210], [400, 235], [390, 268], [402, 298], [428, 318], [458, 328], [488, 322]], lp: [368, 305], la: 'end'
+            },
+            {
+                id: 'sha_loop', label: 'T7-T11', name: 'Interior Loop', type: 'corner',
+                desc: 'Technical back-of-circuit loop — aero-loaded sequence, Red Bull competitive here',
+                speeds: { mercedes: 178, ferrari: 175, mclaren: 165, redbull: 182 },
+                pts: [[488, 322], [525, 322], [558, 308], [578, 278], [580, 242], [568, 210], [545, 185], [512, 165], [472, 155], [428, 155], [390, 165], [362, 185]], lp: [598, 252], la: 'start'
+            },
+            {
+                id: 'sha_s2', label: 'S2', name: 'Back Straight', type: 'straight',
+                desc: 'DRS zone 2 running right-to-left — 310+ km/h before T13 braking zone',
+                speeds: { mercedes: 312, ferrari: 315, mclaren: 318, redbull: 302 },
+                pts: [[362, 185], [298, 188], [235, 188], [175, 185], [118, 185], [78, 195]], lp: [218, 168], la: 'middle'
+            },
+            {
+                id: 'sha_final', label: 'T13-T16', name: 'Final Chicane Complex', type: 'corner',
+                desc: 'Right-left-right final sequence — exit speed onto pit straight defines overall lap time',
+                speeds: { mercedes: 148, ferrari: 155, mclaren: 140, redbull: 145 },
+                pts: [[78, 195], [48, 220], [38, 262], [48, 308], [72, 350], [85, 385], [82, 385]], lp: [48, 268], la: 'end'
             },
         ]
     },
@@ -146,134 +177,44 @@ export const TRACKS: Record<string, TrackData> = {
         ]
     },
 
-    china: {
-        name: 'Shanghai International Circuit', country: 'China',
+    bahrain: {
+        name: 'Bahrain International Circuit', country: 'Bahrain',
         segments: [
             {
-                id: 'sha_s1', label: 'S1', name: 'Start/Finish Straight', type: 'straight',
-                desc: '2nd longest F1 straight at 1.175 km — DRS zone 1, 330+ km/h at speed trap',
-                speeds: { mercedes: 328, ferrari: 332, mclaren: 338, redbull: 318 },
-                pts: [[82, 385], [200, 385], [340, 385], [478, 385], [545, 375]], lp: [310, 365], la: 'middle'
+                id: 'bah_s1', label: 'S1', name: 'Start/Finish Straight', type: 'straight',
+                desc: 'Pit straight under floodlights — DRS zone 1, 320+ km/h into heavy T1 braking',
+                speeds: { mercedes: 318, ferrari: 322, mclaren: 328, redbull: 315 },
+                pts: [[120, 200], [220, 200], [340, 198], [460, 195], [540, 192]], lp: [330, 178], la: 'middle'
             },
             {
-                id: 'sha_t12', label: 'T1-T2', name: 'Turns 1-2 Hairpin', type: 'corner',
-                desc: 'Signature Shanghai hairpin — very slow apex, enormous braking zone, DRS overtake zone',
-                speeds: { mercedes: 72, ferrari: 76, mclaren: 65, redbull: 70 },
-                pts: [[545, 375], [582, 352], [608, 312], [615, 262], [602, 218], [572, 190], [530, 178], [488, 178], [450, 188], [422, 210]], lp: [648, 290], la: 'start'
+                id: 'bah_t14', label: 'T1-T4', name: 'Sakhir Complex', type: 'corner',
+                desc: 'Signature right-left-right-left complex — 90 km/h, biggest overtaking zone',
+                speeds: { mercedes: 92, ferrari: 98, mclaren: 85, redbull: 90 },
+                pts: [[540, 192], [575, 188], [600, 175], [612, 155], [608, 132], [590, 118], [565, 112], [538, 118], [520, 138], [515, 162]], lp: [640, 155], la: 'start'
             },
             {
-                id: 'sha_esses', label: 'T3-T6', name: 'Esses Section', type: 'corner',
-                desc: 'Flowing S-curves — aero efficiency critical, medium speed ~190 km/h',
-                speeds: { mercedes: 198, ferrari: 188, mclaren: 182, redbull: 195 },
-                pts: [[422, 210], [400, 235], [390, 268], [402, 298], [428, 318], [458, 328], [488, 322]], lp: [368, 305], la: 'end'
+                id: 'bah_t58', label: 'T5-T8', name: 'Middle Sector', type: 'corner',
+                desc: 'Technical flowing section — aero balance critical, 180 km/h average',
+                speeds: { mercedes: 185, ferrari: 178, mclaren: 172, redbull: 182 },
+                pts: [[515, 162], [492, 148], [462, 142], [428, 148], [398, 162], [378, 185], [368, 212]], lp: [440, 125], la: 'middle'
             },
             {
-                id: 'sha_loop', label: 'T7-T11', name: 'Interior Loop', type: 'corner',
-                desc: 'Technical back-of-circuit loop — aero-loaded sequence, Red Bull competitive here',
-                speeds: { mercedes: 178, ferrari: 175, mclaren: 165, redbull: 182 },
-                pts: [[488, 322], [525, 322], [558, 308], [578, 278], [580, 242], [568, 210], [545, 185], [512, 165], [472, 155], [428, 155], [390, 165], [362, 185]], lp: [598, 252], la: 'start'
+                id: 'bah_s2', label: 'S2', name: 'Back Straight', type: 'straight',
+                desc: 'DRS zone 2 — 315+ km/h, long run down to T11 braking',
+                speeds: { mercedes: 315, ferrari: 318, mclaren: 322, redbull: 308 },
+                pts: [[368, 212], [350, 248], [330, 288], [310, 325], [288, 358]], lp: [380, 288], la: 'middle'
             },
             {
-                id: 'sha_s2', label: 'S2', name: 'Back Straight', type: 'straight',
-                desc: 'DRS zone 2 running right-to-left — 310+ km/h before T13 braking zone',
-                speeds: { mercedes: 312, ferrari: 315, mclaren: 318, redbull: 302 },
-                pts: [[362, 185], [298, 188], [235, 188], [175, 185], [118, 185], [78, 195]], lp: [218, 168], la: 'middle'
+                id: 'bah_t1113', label: 'T11-T13', name: 'Desert Complex', type: 'corner',
+                desc: 'Tight left-right sequence — 82 km/h, traction-limited exit',
+                speeds: { mercedes: 82, ferrari: 88, mclaren: 78, redbull: 85 },
+                pts: [[288, 358], [268, 382], [252, 398], [242, 418], [248, 438], [268, 448], [295, 445], [318, 432]], lp: [215, 418], la: 'end'
             },
             {
-                id: 'sha_final', label: 'T13-T16', name: 'Final Chicane Complex', type: 'corner',
-                desc: 'Right-left-right final sequence — exit speed onto pit straight defines overall lap time',
-                speeds: { mercedes: 148, ferrari: 155, mclaren: 140, redbull: 145 },
-                pts: [[78, 195], [48, 220], [38, 262], [48, 308], [72, 350], [85, 385], [82, 385]], lp: [48, 268], la: 'end'
-            },
-        ]
-    },
-
-    australia: {
-        name: 'Albert Park Circuit', country: 'Australia',
-        segments: [
-            {
-                id: 'aus_s1', label: 'S1', name: 'Start/Finish Straight', type: 'straight',
-                desc: 'Pit straight alongside the lake — DRS zone, 310 km/h approach into T1',
-                speeds: { mercedes: 308, ferrari: 305, mclaren: 315, redbull: 298 },
-                pts: [[553, 100], [553, 168], [552, 245], [548, 318]], lp: [578, 205], la: 'start'
-            },
-            {
-                id: 'aus_t12', label: 'T1-T2', name: 'Turns 1-2 Chicane', type: 'corner',
-                desc: 'Opening chicane — heavy braking from 310 km/h, right then sharp left',
-                speeds: { mercedes: 88, ferrari: 92, mclaren: 82, redbull: 86 },
-                pts: [[548, 318], [562, 352], [572, 382], [568, 410], [548, 428], [518, 435], [488, 428], [462, 412]], lp: [612, 378], la: 'start'
-            },
-            {
-                id: 'aus_t36', label: 'T3-T6', name: 'Lakeside Complex', type: 'corner',
-                desc: 'Fast flowing sequence alongside the lake — taken near flat, big commitment from drivers',
-                speeds: { mercedes: 192, ferrari: 182, mclaren: 178, redbull: 188 },
-                pts: [[462, 412], [422, 420], [382, 420], [338, 412], [302, 392], [275, 362], [262, 328]], lp: [318, 442], la: 'middle'
-            },
-            {
-                id: 'aus_t78', label: 'T7-T8', name: 'Western Straight', type: 'straight',
-                desc: 'Park-side run through the western grounds — medium speed into T9 chicane',
-                speeds: { mercedes: 268, ferrari: 262, mclaren: 272, redbull: 255 },
-                pts: [[262, 328], [258, 292], [260, 258], [268, 225], [282, 198], [302, 175]], lp: [228, 262], la: 'end'
-            },
-            {
-                id: 'aus_t910', label: 'T9-T10', name: 'Turns 9-10 Chicane', type: 'corner',
-                desc: 'DRS detection chicane — key overtaking setup zone, tight left-right sequence',
-                speeds: { mercedes: 135, ferrari: 140, mclaren: 128, redbull: 132 },
-                pts: [[302, 175], [338, 160], [378, 152], [418, 152], [455, 158], [482, 175], [498, 200]], lp: [390, 132], la: 'middle'
-            },
-            {
-                id: 'aus_t1114', label: 'T11-T14', name: 'Northern Complex', type: 'corner',
-                desc: 'Tricky technical sequence — car balance setup critical, drivers flag kerb issues',
-                speeds: { mercedes: 202, ferrari: 192, mclaren: 185, redbull: 195 },
-                pts: [[498, 200], [508, 228], [508, 258], [495, 282], [472, 296], [442, 302], [408, 296], [378, 282], [355, 260], [342, 235], [340, 208], [348, 182], [362, 162]], lp: [530, 252], la: 'start'
-            },
-            {
-                id: 'aus_t1516', label: 'T15-T16', name: 'Final Corners', type: 'corner',
-                desc: 'Final chicane onto pit straight — slow exit, but sets up the whole next lap',
-                speeds: { mercedes: 155, ferrari: 160, mclaren: 148, redbull: 152 },
-                pts: [[362, 162], [395, 148], [432, 138], [470, 135], [508, 138], [535, 148], [550, 105], [553, 100]], lp: [460, 118], la: 'middle'
-            },
-        ]
-    },
-
-    silverstone: {
-        name: 'Silverstone Circuit', country: 'Great Britain',
-        segments: [
-            {
-                id: 'sil_s1', label: 'S1', name: 'Wellington Straight', type: 'straight',
-                desc: 'Pit straight — DRS zone 1, 310+ km/h approach into Copse',
-                speeds: { mercedes: 312, ferrari: 308, mclaren: 318, redbull: 305 },
-                pts: [[80, 300], [180, 300], [290, 298], [400, 295]], lp: [240, 278], la: 'middle'
-            },
-            {
-                id: 'sil_copse', label: 'T1', name: 'Copse', type: 'corner',
-                desc: 'Fast right-hander — taken near flat at 280 km/h, massive aero demand',
-                speeds: { mercedes: 282, ferrari: 275, mclaren: 270, redbull: 278 },
-                pts: [[400, 295], [440, 288], [478, 270], [505, 245], [520, 215]], lp: [540, 270], la: 'start'
-            },
-            {
-                id: 'sil_maggotts', label: 'T2-T5', name: 'Maggotts-Becketts', type: 'corner',
-                desc: 'Legendary high-speed esses — 250 km/h direction changes, ultimate car test',
-                speeds: { mercedes: 258, ferrari: 248, mclaren: 242, redbull: 255 },
-                pts: [[520, 215], [530, 185], [520, 155], [498, 132], [468, 118], [435, 112], [405, 118]], lp: [560, 150], la: 'start'
-            },
-            {
-                id: 'sil_hangar', label: 'S2', name: 'Hangar Straight', type: 'straight',
-                desc: 'Fastest point on track — DRS zone 2, 330+ km/h',
-                speeds: { mercedes: 332, ferrari: 328, mclaren: 338, redbull: 325 },
-                pts: [[405, 118], [340, 120], [270, 125], [200, 130], [140, 138]], lp: [270, 102], la: 'middle'
-            },
-            {
-                id: 'sil_stowe', label: 'T6', name: 'Stowe', type: 'corner',
-                desc: 'Heavy braking right-hander after Hangar Straight — key overtaking spot',
-                speeds: { mercedes: 168, ferrari: 174, mclaren: 162, redbull: 170 },
-                pts: [[140, 138], [110, 148], [92, 168], [85, 195], [90, 225]], lp: [55, 168], la: 'end'
-            },
-            {
-                id: 'sil_vale', label: 'T7-T9', name: 'Vale-Club', type: 'corner',
-                desc: 'Technical slow section — exit speed onto Wellington Straight is critical',
-                speeds: { mercedes: 125, ferrari: 130, mclaren: 118, redbull: 122 },
-                pts: [[90, 225], [95, 255], [105, 275], [80, 300]], lp: [55, 258], la: 'end'
+                id: 'bah_t1415', label: 'T14-T15', name: 'Final Section', type: 'corner',
+                desc: 'Sweeping entry to final straight — exit speed feeds the DRS zone',
+                speeds: { mercedes: 195, ferrari: 188, mclaren: 182, redbull: 192 },
+                pts: [[318, 432], [345, 412], [360, 385], [358, 352], [342, 325], [315, 305], [278, 292], [242, 275], [215, 252], [195, 225], [185, 200], [120, 200]], lp: [285, 305], la: 'end'
             },
         ]
     },
@@ -332,44 +273,44 @@ export const TRACKS: Record<string, TrackData> = {
         ]
     },
 
-    bahrain: {
-        name: 'Bahrain International Circuit', country: 'Bahrain',
+    silverstone: {
+        name: 'Silverstone Circuit', country: 'Great Britain',
         segments: [
             {
-                id: 'bah_s1', label: 'S1', name: 'Start/Finish Straight', type: 'straight',
-                desc: 'Pit straight under floodlights — DRS zone 1, 320+ km/h into heavy T1 braking',
-                speeds: { mercedes: 318, ferrari: 322, mclaren: 328, redbull: 315 },
-                pts: [[120, 200], [220, 200], [340, 198], [460, 195], [540, 192]], lp: [330, 178], la: 'middle'
+                id: 'sil_s1', label: 'S1', name: 'Wellington Straight', type: 'straight',
+                desc: 'Pit straight — DRS zone 1, 310+ km/h approach into Copse',
+                speeds: { mercedes: 312, ferrari: 308, mclaren: 318, redbull: 305 },
+                pts: [[80, 300], [180, 300], [290, 298], [400, 295]], lp: [240, 278], la: 'middle'
             },
             {
-                id: 'bah_t14', label: 'T1-T4', name: 'Sakhir Complex', type: 'corner',
-                desc: 'Signature right-left-right-left complex — 90 km/h, biggest overtaking zone',
-                speeds: { mercedes: 92, ferrari: 98, mclaren: 85, redbull: 90 },
-                pts: [[540, 192], [575, 188], [600, 175], [612, 155], [608, 132], [590, 118], [565, 112], [538, 118], [520, 138], [515, 162]], lp: [640, 155], la: 'start'
+                id: 'sil_copse', label: 'T1', name: 'Copse', type: 'corner',
+                desc: 'Fast right-hander — taken near flat at 280 km/h, massive aero demand',
+                speeds: { mercedes: 282, ferrari: 275, mclaren: 270, redbull: 278 },
+                pts: [[400, 295], [440, 288], [478, 270], [505, 245], [520, 215]], lp: [540, 270], la: 'start'
             },
             {
-                id: 'bah_t58', label: 'T5-T8', name: 'Middle Sector', type: 'corner',
-                desc: 'Technical flowing section — aero balance critical, 180 km/h average',
-                speeds: { mercedes: 185, ferrari: 178, mclaren: 172, redbull: 182 },
-                pts: [[515, 162], [492, 148], [462, 142], [428, 148], [398, 162], [378, 185], [368, 212]], lp: [440, 125], la: 'middle'
+                id: 'sil_maggotts', label: 'T2-T5', name: 'Maggotts-Becketts', type: 'corner',
+                desc: 'Legendary high-speed esses — 250 km/h direction changes, ultimate car test',
+                speeds: { mercedes: 258, ferrari: 248, mclaren: 242, redbull: 255 },
+                pts: [[520, 215], [530, 185], [520, 155], [498, 132], [468, 118], [435, 112], [405, 118]], lp: [560, 150], la: 'start'
             },
             {
-                id: 'bah_s2', label: 'S2', name: 'Back Straight', type: 'straight',
-                desc: 'DRS zone 2 — 315+ km/h, long run down to T11 braking',
-                speeds: { mercedes: 315, ferrari: 318, mclaren: 322, redbull: 308 },
-                pts: [[368, 212], [350, 248], [330, 288], [310, 325], [288, 358]], lp: [380, 288], la: 'middle'
+                id: 'sil_hangar', label: 'S2', name: 'Hangar Straight', type: 'straight',
+                desc: 'Fastest point on track — DRS zone 2, 330+ km/h',
+                speeds: { mercedes: 332, ferrari: 328, mclaren: 338, redbull: 325 },
+                pts: [[405, 118], [340, 120], [270, 125], [200, 130], [140, 138]], lp: [270, 102], la: 'middle'
             },
             {
-                id: 'bah_t1113', label: 'T11-T13', name: 'Desert Complex', type: 'corner',
-                desc: 'Tight left-right sequence — 82 km/h, traction-limited exit',
-                speeds: { mercedes: 82, ferrari: 88, mclaren: 78, redbull: 85 },
-                pts: [[288, 358], [268, 382], [252, 398], [242, 418], [248, 438], [268, 448], [295, 445], [318, 432]], lp: [215, 418], la: 'end'
+                id: 'sil_stowe', label: 'T6', name: 'Stowe', type: 'corner',
+                desc: 'Heavy braking right-hander after Hangar Straight — key overtaking spot',
+                speeds: { mercedes: 168, ferrari: 174, mclaren: 162, redbull: 170 },
+                pts: [[140, 138], [110, 148], [92, 168], [85, 195], [90, 225]], lp: [55, 168], la: 'end'
             },
             {
-                id: 'bah_t1415', label: 'T14-T15', name: 'Final Section', type: 'corner',
-                desc: 'Sweeping entry to final straight — exit speed feeds the DRS zone',
-                speeds: { mercedes: 195, ferrari: 188, mclaren: 182, redbull: 192 },
-                pts: [[318, 432], [345, 412], [360, 385], [358, 352], [342, 325], [315, 305], [278, 292], [242, 275], [215, 252], [195, 225], [185, 200], [120, 200]], lp: [285, 305], la: 'end'
+                id: 'sil_vale', label: 'T7-T9', name: 'Vale-Club', type: 'corner',
+                desc: 'Technical slow section — exit speed onto Wellington Straight is critical',
+                speeds: { mercedes: 125, ferrari: 130, mclaren: 118, redbull: 122 },
+                pts: [[90, 225], [95, 255], [105, 275], [80, 300]], lp: [55, 258], la: 'end'
             },
         ]
     },
@@ -421,6 +362,7 @@ export const TRACKS: Record<string, TrackData> = {
             },
         ]
     },
+
     zandvoort: {
         name: 'Circuit Zandvoort', country: 'Netherlands',
         segments: [
@@ -456,6 +398,67 @@ export const TRACKS: Record<string, TrackData> = {
             },
         ]
     },
+
+    monza: {
+        name: 'Autodromo Nazionale di Monza', country: 'Italy',
+        segments: [
+            {
+                id: 's1', label: 'S1', name: 'Main Straight', type: 'straight',
+                desc: 'Pit straight — DRS zone 1, peak speed sector',
+                speeds: { mercedes: 338, ferrari: 344, mclaren: 348, redbull: 342 },
+                pts: [[82, 150], [200, 150], [330, 150], [450, 150], [500, 150]], lp: [290, 128], la: 'middle'
+            },
+            {
+                id: 't12', label: 'T1-T2', name: 'Variante del Rettifilo', type: 'corner',
+                desc: 'First chicane — heaviest braking zone, 340 to 85 km/h',
+                speeds: { mercedes: 86, ferrari: 88, mclaren: 82, redbull: 85 },
+                pts: [[500, 150], [536, 150], [556, 156], [561, 173], [555, 190], [534, 194], [514, 194], [505, 210], [510, 230], [531, 238], [562, 240]], lp: [608, 194], la: 'start'
+            },
+            {
+                id: 't3', label: 'T3', name: 'Curva Grande', type: 'corner',
+                desc: 'Sweeping high-speed right hander at ~265 km/h',
+                speeds: { mercedes: 272, ferrari: 263, mclaren: 258, redbull: 268 },
+                pts: [[562, 240], [596, 270], [630, 308], [656, 348], [668, 390]], lp: [716, 300], la: 'start'
+            },
+            {
+                id: 't45', label: 'T4-T5', name: 'Variante Roggia', type: 'corner',
+                desc: 'Second chicane — entry from Curva Grande at speed',
+                speeds: { mercedes: 89, ferrari: 95, mclaren: 87, redbull: 91 },
+                pts: [[668, 390], [679, 410], [697, 422], [710, 440], [701, 454], [680, 459], [660, 463]], lp: [750, 437], la: 'start'
+            },
+            {
+                id: 't6', label: 'T6', name: 'Lesmo 1', type: 'corner',
+                desc: 'Fast right-hander through the wooded section',
+                speeds: { mercedes: 220, ferrari: 215, mclaren: 209, redbull: 224 },
+                pts: [[660, 463], [628, 471], [600, 465], [576, 451], [567, 445]], lp: [636, 494], la: 'middle'
+            },
+            {
+                id: 't7', label: 'T7', name: 'Lesmo 2', type: 'corner',
+                desc: 'Tighter second Lesmo — high mechanical grip demand',
+                speeds: { mercedes: 197, ferrari: 192, mclaren: 187, redbull: 201 },
+                pts: [[567, 445], [547, 453], [527, 462], [507, 468]], lp: [522, 494], la: 'middle'
+            },
+            {
+                id: 's2', label: 'S2', name: 'Rettifilo Sud', type: 'straight',
+                desc: 'Back straight — DRS zone 2, second top-speed measurement',
+                speeds: { mercedes: 330, ferrari: 337, mclaren: 343, redbull: 335 },
+                pts: [[507, 468], [420, 471], [330, 471], [240, 470], [165, 467]], lp: [330, 492], la: 'middle'
+            },
+            {
+                id: 't810', label: 'T8-T10', name: 'Variante Ascari', type: 'corner',
+                desc: 'Fast chicane sequence — complex rhythm and balance',
+                speeds: { mercedes: 175, ferrari: 183, mclaren: 174, redbull: 177 },
+                pts: [[165, 467], [140, 462], [122, 447], [118, 422], [128, 402], [149, 391], [169, 387], [183, 370], [178, 352]], lp: [60, 430], la: 'end'
+            },
+            {
+                id: 't11', label: 'T11', name: 'Curva Parabolica', type: 'corner',
+                desc: 'Long sweeping final corner — exit speed feeds main straight',
+                speeds: { mercedes: 163, ferrari: 151, mclaren: 147, redbull: 155 },
+                pts: [[178, 352], [163, 310], [139, 269], [112, 229], [90, 193], [82, 167], [82, 150]], lp: [30, 265], la: 'end'
+            },
+        ]
+    },
+
     interlagos: {
         name: 'Autódromo José Carlos Pace', country: 'Brazil',
         segments: [
@@ -491,4 +494,5 @@ export const TRACKS: Record<string, TrackData> = {
             },
         ]
     },
+
 };

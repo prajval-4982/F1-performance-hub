@@ -26,7 +26,9 @@ export default function Header() {
         <header className="site-header" id="site-header">
             <div className="header-inner">
                 <Link href="/" className="logo">
-                    <div className="logo-icon">🏎️</div>
+                    <div className="logo-icon" style={{ background: 'none' }}>
+                        <Image src="/logo.png" alt="F1 Logo" width={32} height={20} style={{ objectFit: 'contain' }} />
+                    </div>
                     <div className="logo-text">
                         <h1 className="logo-title">F1 Performance Hub</h1>
                         <p className="logo-sub">Track Analyzer · Live 2026 Season · Jolpica API</p>

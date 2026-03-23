@@ -34,8 +34,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [pathname, isLanding, router]);
 
-  if (isLanding || pathname === "/recap") {
-    // Landing and Recap pages manage their own nav & footer
+  if (isLanding) {
+    // Landing page manages its own nav & footer
     return <>{children}</>;
   }
 

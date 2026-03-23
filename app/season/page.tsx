@@ -11,10 +11,14 @@ import {
 } from '@/lib/api';
 import { teamColor, FLAG_MAP, TEAMS_2026, REG_NOTES_2026, NAT_MAP } from '@/lib/constants';
 import type { DriverStanding, ConstructorStanding, Race } from '@/lib/types';
-import TyreStrategy from '@/components/season/TyreStrategy';
-import RaceWeather from '@/components/season/RaceWeather';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import TeamLogo from '@/components/common/TeamLogo';
 import StandingsSkeleton from '@/components/season/StandingsSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const TyreStrategy = dynamic(() => import('@/components/season/TyreStrategy'), { ssr: false });
+const RaceWeather = dynamic(() => import('@/components/season/RaceWeather'), { ssr: false });
 
 type SubTab = 'standings' | 'results' | 'schedule' | 'teams' | 'strategy';
 
@@ -488,24 +492,26 @@ export default function SeasonPage() {
                                 <p className="sec-label">Team performance — 2026</p>
                                 {TEAMS_2026.map(t => (
                                     <div key={t.name} className="team-row">
-                                        <div className="team-header">
+                                        <div className="team-header" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                             <div
                                                 className="team-accent"
-                                                style={{ height: '20px', background: t.color }}
+                                                style={{ height: '32px', background: t.color, width: '3px', borderRadius: '4px' }}
                                             />
-                                            <span className="team-name-t">{t.name}</span>
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={t.logo}
-                                                className="team-logo"
-                                                alt={`${t.name} logo`}
-                                                onError={e => {
-                                                    (e.target as HTMLImageElement).style.display = 'none';
-                                                }}
-                                            />
-                                            <span style={{ fontSize: '14px', marginLeft: '8px' }}>{t.status}</span>
+                                            <div className="team-logo-box" style={{ background: '#fff', padding: '4px', borderRadius: '4px', width: '48px', height: '32px' }}>
+                                                <TeamLogo
+                                                    src={t.logo}
+                                                    name={t.name}
+                                                    color={t.color}
+                                                />
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <span className="team-name-t" style={{ fontSize: '14px', fontWeight: 800, letterSpacing: '0.02em' }}>{t.name}</span>
+                                                    <span style={{ fontSize: '16px' }}>{t.status}</span>
+                                                </div>
+                                                <p className="team-note" style={{ fontSize: '11px', color: 'var(--text-2)', marginTop: '2px', padding: 0 }}>{t.note}</p>
+                                            </div>
                                         </div>
-                                        <p className="team-note">{t.note}</p>
                                     </div>
                                 ))}
                             </div>

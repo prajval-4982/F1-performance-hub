@@ -41,8 +41,9 @@ export default function D3RadarChart() {
                     return `${cx + levelFactor * Math.cos(angle)},${cy + levelFactor * Math.sin(angle)}`;
                 }).join(' '))
                 .attr('fill', 'none')
-                .attr('stroke', '#1e1e38')
-                .attr('stroke-width', '0.5');
+                .attr('stroke', 'currentColor')
+                .attr('stroke-width', '0.5')
+                .attr('opacity', 0.2);
         }
 
         // Draw Axes and Labels
@@ -58,18 +59,20 @@ export default function D3RadarChart() {
             .attr('y1', cy)
             .attr('x2', (d, i) => cx + rScale(100) * Math.cos(angleSlice * i - Math.PI / 2))
             .attr('y2', (d, i) => cy + rScale(100) * Math.sin(angleSlice * i - Math.PI / 2))
-            .attr('stroke', '#1e1e38')
-            .attr('stroke-width', '0.5');
+            .attr('stroke', 'currentColor')
+            .attr('stroke-width', '0.5')
+            .attr('opacity', 0.3);
 
         axes.append('text')
             .attr('class', 'legend')
-            .style('font-size', '8.5px')
-            .style('font-family', 'Rajdhani, sans-serif')
-            .attr('fill', '#2a2a4a')
+            .style('font-size', '10px')
+            .style('font-weight', '700')
+            .style('font-family', 'var(--font-mono)')
+            .attr('fill', 'currentColor')
             .attr('text-anchor', 'middle')
             .attr('dy', '0.35em')
-            .attr('x', (d, i) => cx + rScale(100) * 1.15 * Math.cos(angleSlice * i - Math.PI / 2))
-            .attr('y', (d, i) => cy + rScale(100) * 1.15 * Math.sin(angleSlice * i - Math.PI / 2) + 4)
+            .attr('x', (d, i) => cx + rScale(100) * 1.2 * Math.cos(angleSlice * i - Math.PI / 2))
+            .attr('y', (d, i) => cy + rScale(100) * 1.2 * Math.sin(angleSlice * i - Math.PI / 2) + 4)
             .text(d => d);
 
         const radarLine = d3.lineRadial<number>()

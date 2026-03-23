@@ -5,6 +5,21 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import LandingNav from "@/components/layout/LandingNav";
+import { motion, useMotionValue, useTransform, animate, useSpring } from "framer-motion";
+import { SEASON_2026, completedRaces, latestRace, latestFastestLap } from "@/lib/season2026";
+import { teamColor } from "@/lib/constants";
+
+function AnimatedNumber({ value }: { value: number }) {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+
+  useEffect(() => {
+    const controls = animate(count, value, { duration: 2, ease: "easeOut" });
+    return controls.stop;
+  }, [count, value]);
+
+  return <motion.span>{rounded}</motion.span>;
+}
 
 export default function Home() {
   const statNumsRef = useRef<HTMLDivElement>(null);
@@ -21,27 +36,18 @@ export default function Home() {
     );
     revealEls.forEach((el) => observer.observe(el));
 
-    // Counter animation
-    function animateCount(el: Element, target: number, suffix: string) {
-      let current = 0;
-      const step = Math.ceil(target / 30);
-      const timer = setInterval(() => {
-        current = Math.min(current + step, target);
-        el.textContent = current + suffix;
-        if (current >= target) clearInterval(timer);
-      }, 40);
-    }
-    const timer = setTimeout(() => {
-      const nums = document.querySelectorAll(".lp-stat-num");
-      if (nums[0]) animateCount(nums[0], 10, " tracks");
-      if (nums[1]) animateCount(nums[1], 24, "");
-    }, 900);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer);
-    };
+    return () => observer.disconnect();
   }, []);
+
+  const containerVars = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+  };
+
+  const itemVars = {
+    hidden: { opacity: 0, scale: 0.96, y: 15 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5, ease: "circOut" as const } }
+  };
 
   return (
     <div className="lp-root" ref={statNumsRef}>
@@ -62,44 +68,104 @@ export default function Home() {
         </div>
         <div className="lp-car-dot" />
 
-        <div className="lp-eyebrow">2026 Season · Live</div>
-
-        <h1 className="lp-h1">
-          F1 Performance
-          <span className="lp-h1-line2">Hub</span>
-        </h1>
-
-        <p className="lp-hero-sub">
-          Live championship standings, interactive track maps with{" "}
-          <strong>sector-by-sector speed analysis</strong>, race results, and
-          team comparisons — all powered by real telemetry data.
-        </p>
-
-        <div className="lp-hero-ctas">
-          <Link href="/track" className="lp-btn-primary">
-            ENTER THE HUB
-          </Link>
-          <a href="#features" className="lp-btn-ghost">
-            Explore Features
-          </a>
-        </div>
-
-        <div className="lp-hero-stats">
-          <div className="lp-stat">
-            <div className="lp-stat-num">10 tracks</div>
-            <div className="lp-stat-label">Circuits mapped</div>
-          </div>
-          <div className="lp-stat">
-            <div className="lp-stat-num">24</div>
-            <div className="lp-stat-label">Race calendar</div>
-          </div>
-          <div className="lp-stat">
-            <div className="lp-stat-num">
-              2<span>/24</span>
+        <motion.div 
+          className="lp-hero-bento"
+          variants={containerVars}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Cell A: Main Title */}
+          <motion.div className="bento-card cell-main" variants={itemVars}>
+            <div className="label">2026 Season Hub</div>
+            <h1 className="title">
+              F1 Performance<br/>
+              <span style={{ color: 'var(--lp-red)' }}>Hub 2026</span>
+            </h1>
+            <p className="desc">
+              Live championship standings, interactive track maps with <strong>sector-by-sector speed analysis</strong>, and team comparisons.
+            </p>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <Link href="/track" className="lp-btn-primary">
+                ENTER THE HUB
+              </Link>
+              <Link href="/recap" className="lp-btn-ghost">
+                Explore →
+              </Link>
             </div>
-            <div className="lp-stat-label">Races complete</div>
-          </div>
-        </div>
+          </motion.div>
+
+          {/* Cell B: Standings */}
+          <motion.div className="bento-card cell-standings" variants={itemVars}>
+            <div className="label">Standings</div>
+            <div style={{ marginTop: 'auto' }}>
+              {SEASON_2026.championship.drivers.slice(0, 3).map((d, i) => (
+                <div key={d.driver} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: i < 2 ? '8px' : '0' }}>
+                  <span style={{ color: i === 0 ? 'var(--lp-red)' : 'rgba(255,255,255,0.4)' }}>{d.pos}.</span> 
+                  {d.driver.split(' ').pop()} 
+                  <strong style={{ marginLeft: 'auto' }}>
+                    <AnimatedNumber value={d.points} />
+                  </strong>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Cell C: Current Round */}
+          <motion.div className="bento-card cell-round" variants={itemVars}>
+            <div className="label">Next Round</div>
+            <div style={{ marginTop: 'auto' }}>
+              <div style={{ fontSize: '32px', fontWeight: 800 }}>R{SEASON_2026.currentRound.toString().padStart(2, '0')}</div>
+              <div style={{ fontSize: '14px', color: 'var(--lp-txt2)' }}>
+                {SEASON_2026.nextRace.name} {SEASON_2026.nextRace.flag}
+              </div>
+              <div style={{ fontSize: '11px', color: 'var(--lp-txt3)', textTransform: 'uppercase', marginTop: '4px' }}>
+                {SEASON_2026.nextRace.date}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Cell D: Latest Winner */}
+          <motion.div 
+            className="bento-card cell-winner" 
+            variants={itemVars} 
+            style={{ borderLeft: `4px solid ${latestRace ? teamColor(latestRace.winner.team.toLowerCase().replace(/\s+/g, '_')) : 'var(--lp-teal)'}` }}
+          >
+            <div className="label">Latest Winner — {latestRace?.name}</div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 'auto' }}>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: 800 }}>{latestRace?.winner.driver}</div>
+                <div style={{ fontSize: '14px', color: 'var(--lp-txt2)' }}>{latestRace?.winner.team} F1</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div className="label" style={{ marginBottom: 4 }}>Time</div>
+                <div style={{ fontFamily: 'monospace', fontSize: '18px' }}>{latestRace?.winner.time}</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Stat Chips */}
+          <motion.div className="bento-card cell-stat" variants={itemVars}>
+            <div className="value">{SEASON_2026.totalRounds}</div>
+            <div className="sub">{completedRaces.length} Completed</div>
+          </motion.div>
+          <motion.div className="bento-card cell-stat" variants={itemVars}>
+            <div className="value">{SEASON_2026.totalDrivers}</div>
+            <div className="sub">Drivers</div>
+          </motion.div>
+          <motion.div className="bento-card cell-stat" variants={itemVars}>
+            <div className="value">{SEASON_2026.totalTeams}</div>
+            <div className="sub">Teams</div>
+          </motion.div>
+          <motion.div className="bento-card cell-stat" variants={itemVars}>
+            <div className="label" style={{ marginBottom: 4 }}>Fastest Lap</div>
+            <div style={{ fontFamily: 'Orbitron, monospace', fontSize: '22px', fontWeight: 800, color: 'var(--lp-purple)', letterSpacing: '-0.02em' }}>
+              {latestFastestLap?.time}
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--lp-txt3)', textTransform: 'uppercase', marginTop: '4px' }}>
+              {latestFastestLap?.driver} — R{latestRace?.round}
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* ── TICKER ── */}
@@ -108,7 +174,7 @@ export default function Home() {
           {[
             "RUSSELL LEADS CHAMPIONSHIP · 51 PTS",
             "ANTONELLI WINS CHINA GP · YOUNGEST EVER POLESITTER",
-            "MERCEDES DOMINANT · 4 FROM 4 WINS",
+            "MERCEDES DOMINANT · 2 FROM 2 WINS",
             "MCLAREN CRISIS · 4 DNS IN 2 RACES",
             "HAMILTON FIRST FERRARI PODIUM · CHINA P3",
             "AUDI FIRST EVER F1 POINTS · BORTOLETO P9 AUSTRALIA",
@@ -117,7 +183,7 @@ export default function Home() {
             .concat([
               "RUSSELL LEADS CHAMPIONSHIP · 51 PTS",
               "ANTONELLI WINS CHINA GP · YOUNGEST EVER POLESITTER",
-              "MERCEDES DOMINANT · 4 FROM 4 WINS",
+              "MERCEDES DOMINANT · 2 FROM 2 WINS",
               "MCLAREN CRISIS · 4 DNS IN 2 RACES",
               "HAMILTON FIRST FERRARI PODIUM · CHINA P3",
               "AUDI FIRST EVER F1 POINTS · BORTOLETO P9 AUSTRALIA",
@@ -486,7 +552,9 @@ export default function Home() {
       {/* ── FOOTER ── */}
       <footer className="lp-footer">
         <div className="lp-footer-logo">
-          <div className="lp-footer-flag">🏎️</div>
+          <div className="lp-footer-flag" style={{ background: 'none' }}>
+            <Image src="/logo.png" alt="F1 Logo" width={26} height={16} style={{ objectFit: 'contain' }} />
+          </div>
           F1 PERFORMANCE HUB
         </div>
         <div className="lp-footer-links">

@@ -9,7 +9,18 @@ function toPts(pts: number[][]): string {
 }
 
 function fastest(seg: Segment): string {
-    return Object.entries(seg.speeds).reduce((a, b) => (a[1] > b[1] ? a : b))[0];
+    const entries = Object.entries(seg.speeds);
+    if (!entries.length) return '';
+    let maxTeam = entries[0][0];
+    let maxSpeed = entries[0][1];
+    
+    for (const [team, speed] of entries) {
+        if (speed > maxSpeed) {
+            maxSpeed = speed;
+            maxTeam = team;
+        }
+    }
+    return maxTeam;
 }
 
 function getTeam(id: string) {
@@ -98,7 +109,22 @@ export default function TrackSVG({ track, activeSeg, onHover, onClick }: TrackSV
             {/* Color layer — team color per segment */}
             {track.segments.map(seg => {
                 const isAct = activeSeg?.id === seg.id;
-                const t = getTeam(fastest(seg));
+                
+                // Override S1 with S2 values when hovered, as requested
+                let targetSeg = seg;
+                if (isAct && seg.id === 's1') {
+                    const s2 = track.segments.find(s => s.id === 's2');
+                    if (s2) targetSeg = s2;
+                }
+
+                const winTeamId = fastest(targetSeg);
+                const t = getTeam(winTeamId);
+                
+                // Debug logging as requested
+                if (seg.id === 's1' || seg.id === 's2') {
+                    console.log(`[TrackSVG] Segment: ${seg.id} | Name: ${seg.name} | Fastest: ${winTeamId} | Applied Color: ${t.color}`);
+                }
+
                 return (
                     <polyline
                         key={`col-${seg.id}`}
@@ -130,14 +156,14 @@ export default function TrackSVG({ track, activeSeg, onHover, onClick }: TrackSV
                 />
             ))}
 
-            {/* Hit areas */}
-            {track.segments.map(seg => (
+            {/* Hit areas — reversed so first segments (S1) are on top of last (T11/Finish) */}
+            {[...track.segments].reverse().map(seg => (
                 <polyline
                     key={`hit-${seg.id}`}
                     points={toPts(seg.pts)}
                     fill="none"
                     stroke="transparent"
-                    strokeWidth="30"
+                    strokeWidth="44"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     style={{ cursor: 'pointer' }}
@@ -181,8 +207,8 @@ export default function TrackSVG({ track, activeSeg, onHover, onClick }: TrackSV
             })}
 
             {/* S/F line with glow */}
-            <rect x={sf[0] - 2} y={sf[1] - 16} width={4} height={32} fill={isLight ? '#4a4a78' : 'white'} opacity="0.7" rx="2" />
-            <rect x={sf[0] - 2} y={sf[1] - 16} width={4} height={32} fill={isLight ? '#4a4a78' : 'white'} opacity="0.2" rx="2" filter="url(#seg-glow)" />
+            <rect x={sf[0] - 2} y={sf[1] - 16} width={4} height={32} fill={isLight ? '#4a4a78' : 'white'} opacity="0.7" rx="2" style={{ pointerEvents: 'none' }} />
+            <rect x={sf[0] - 2} y={sf[1] - 16} width={4} height={32} fill={isLight ? '#4a4a78' : 'white'} opacity="0.2" rx="2" filter="url(#seg-glow)" style={{ pointerEvents: 'none' }} />
             <text
                 x={sf[0] + 5}
                 y={sf[1] - 18}

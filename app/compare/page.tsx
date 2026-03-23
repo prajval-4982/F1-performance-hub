@@ -3,14 +3,16 @@
 import { RADAR_TEAMS, ATTR_LABELS, CAR_DIFFS } from '@/data/radar';
 import Link from 'next/link';
 import D3RadarChart from '@/components/compare/D3RadarChart';
+import './brutalism.css';
 
 export default function ComparePage() {
     return (
-        <section aria-label="Car Comparison" className="pane-in">
-            <div className="sub-bar">
-                <span className="pill-btn active">Car Comparison</span>
-                <Link href="/compare/drivers" className="pill-btn">Driver H2H</Link>
-            </div>
+        <div className="brutal-root">
+            <section aria-label="Car Comparison" className="pane-in">
+                <div className="sub-bar">
+                    <span className="pill-btn active">Car Comparison</span>
+                    <Link href="/compare/drivers" className="pill-btn">Driver H2H</Link>
+                </div>
             <div className="grid-2col">
                 <div className="col-main">
                     <div className="card">
@@ -44,7 +46,8 @@ export default function ComparePage() {
                     ))}
                 </div>
             </div>
-        </section>
+            </section>
+        </div>
     );
 }
 

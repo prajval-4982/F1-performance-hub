@@ -1,0 +1,173 @@
+/* brutalism.css — raw, high-impact experiment */
+
+.brutal-root {
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+  font-family: 'Manrope', 'Barlow', sans-serif !important;
+  padding: 40px !important;
+  min-height: 100vh;
+}
+
+.brutal-root * {
+  border-radius: 0 !important;
+  transition: none !important;
+}
+
+.brutal-root .pane-in {
+  animation: none !important;
+}
+
+/* Typography */
+.brutal-root h1, 
+.brutal-root h2, 
+.brutal-root .sec-label {
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.02em !important;
+}
+
+.brutal-root .sec-label {
+  font-size: 24px !important;
+  background: #c40600;
+  color: #fff;
+  padding: 8px 16px;
+  display: inline-block;
+  margin-bottom: 24px !important;
+}
+
+/* Cards & Grid */
+.brutal-root .card {
+  background: transparent !important;
+  border: 4px solid #ffffff !important;
+  padding: 32px !important;
+  box-shadow: 12px 12px 0px #c40600 !important;
+  margin-bottom: 32px !important;
+}
+
+.brutal-root .card:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 12px 12px 0px #ffffff !important;
+}
+
+.brutal-root .card:hover .sec-label {
+  background: #000;
+  color: #fff;
+}
+
+.brutal-root .card:hover .legend {
+  fill: #000 !important;
+}
+
+.brutal-root .card:hover .grid polygon,
+.brutal-root .card:hover .axes line {
+  stroke: #000 !important;
+}
+
+.brutal-root .radar-legend {
+  margin-top: 24px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+}
+
+.brutal-root .rleg-item {
+  font-size: 13px !important;
+}
+
+/* Sub-bar & Buttons */
+.brutal-root .sub-bar {
+  margin-bottom: 48px !important;
+}
+
+.brutal-root .pill-btn {
+  border: 2px solid #fff !important;
+  background: transparent !important;
+  color: #fff !important;
+  padding: 12px 24px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  font-size: 16px !important;
+}
+
+.brutal-root .pill-btn.active {
+  background: #c40600 !important;
+  border-color: #c40600 !important;
+}
+
+.brutal-root .pill-btn:hover:not(.active) {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* Attr Bars */
+.brutal-root .attr-block {
+  margin-bottom: 32px !important;
+}
+
+.brutal-root .attr-label {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+  border-bottom: 2px solid #fff;
+  display: inline-block;
+}
+
+.brutal-root .attr-row {
+  margin-bottom: 8px !important;
+}
+
+.brutal-root .attr-wrap {
+  height: 24px !important;
+  background: #222 !important;
+  border: 2px solid #fff !important;
+}
+
+.brutal-root .attr-fill {
+  height: 100% !important;
+  background: #c40600 !important; /* Force red accent or keep team colors if they look okay, but user said accent is red */
+}
+
+.brutal-root .attr-val {
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  color: #fff !important;
+  margin-left: 12px !important;
+}
+
+/* Diff Cards */
+.brutal-root .diff-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap: 24px !important;
+}
+
+.brutal-root .diff-card {
+  border: 3px solid #fff !important;
+  padding: 20px !important;
+  border-left-width: 12px !important; /* Keep the color accent logic but make it thick */
+}
+
+.brutal-root .diff-card:hover {
+  background: #c40600 !important;
+  border-color: #c40600 !important;
+}
+
+.brutal-root .diff-title {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  margin-bottom: 8px !important;
+}
+
+.brutal-root .diff-note {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  color: rgba(255,255,255,0.8) !important;
+}
+
+.brutal-root .diff-card:hover .diff-note {
+  color: #fff !important;
+}

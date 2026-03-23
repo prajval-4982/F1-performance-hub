@@ -1,10 +1,22 @@
 'use client';
 
 import { type TrackData } from '@/data/tracks';
+import Image from 'next/image';
+import TeamLogo from '@/components/common/TeamLogo';
 import { TEAMS_LIST } from '@/lib/constants';
 
 function fastest(seg: { speeds: Record<string, number> }): string {
-    return Object.entries(seg.speeds).reduce((a, b) => (a[1] > b[1] ? a : b))[0];
+    const entries = Object.entries(seg.speeds);
+    if (!entries.length) return '';
+    let maxTeam = entries[0][0];
+    let maxSpeed = entries[0][1];
+    for (const [team, speed] of entries) {
+        if (speed > maxSpeed) {
+            maxSpeed = speed;
+            maxTeam = team;
+        }
+    }
+    return maxTeam;
 }
 
 interface DominanceListProps {
@@ -24,6 +36,13 @@ export default function DominanceList({ track, onPickSeg }: DominanceListProps) 
                 {dom.map(d => (
                     <div key={d.id} className="dom-row">
                         <div className="dom-bar" style={{ height: '26px', background: d.color }} />
+                        <div className="team-logo-sm-box" style={{ width: '24px', height: '16px', background: '#fff', borderRadius: '2px', overflow: 'hidden' }}>
+                            <TeamLogo
+                                src={d.logo}
+                                name={d.name}
+                                color={d.color}
+                            />
+                        </div>
                         <div className="dom-info">
                             <div className="dom-name">{d.name}</div>
                             <div className="dom-segs">

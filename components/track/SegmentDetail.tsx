@@ -1,10 +1,22 @@
 'use client';
 
 import { type Segment } from '@/data/tracks';
+import Image from 'next/image';
+import TeamLogo from '@/components/common/TeamLogo';
 import { TEAMS_LIST } from '@/lib/constants';
 
 function fastest(seg: Segment): string {
-    return Object.entries(seg.speeds).reduce((a, b) => (a[1] > b[1] ? a : b))[0];
+    const entries = Object.entries(seg.speeds);
+    if (!entries.length) return '';
+    let maxTeam = entries[0][0];
+    let maxSpeed = entries[0][1];
+    for (const [team, speed] of entries) {
+        if (speed > maxSpeed) {
+            maxSpeed = speed;
+            maxTeam = team;
+        }
+    }
+    return maxTeam;
 }
 
 interface SegmentDetailProps {
@@ -66,6 +78,13 @@ export default function SegmentDetail({ seg }: SegmentDetailProps) {
                                             FASTEST
                                         </span>
                                     )}
+                                    <div className="team-logo-detail" style={{ width: '32px', height: '20px', background: '#fff', borderRadius: '2px', overflow: 'hidden', display: 'inline-block', verticalAlign: 'middle', marginRight: '6px' }}>
+                                        <TeamLogo
+                                            src={t.logo}
+                                            name={t.name}
+                                            color={t.color}
+                                        />
+                                    </div>
                                     {t.name}
                                 </span>
                                 <span className="speed-val" style={{ color: t.color }}>{s}</span>

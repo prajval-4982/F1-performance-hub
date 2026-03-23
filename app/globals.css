@@ -1,5 +1,4 @@
 /* globals.css — merged from v1 CSS: reset + tokens + layout + components + track + season + animations */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
 
 /* ══════════════════════════════ reset.css ══════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,6 +39,7 @@ img { display: block; max-width: 100%; }
   --c-rb:       #6692FF;
   --c-aston:    #006F62;
   --c-audi:     #9B0000;
+  --recap-accent: #27F4D2;
 
   /* Status */
   --green:  #5ce65c;
@@ -62,8 +62,9 @@ img { display: block; max-width: 100%; }
   --r-pill: 999px;
 
   /* Typography */
-  --font-ui:    'Rajdhani', 'Inter', system-ui, sans-serif;
-  --font-mono:  'Orbitron', monospace;
+  --font-ui:    var(--font-rajdhani), var(--font-inter), system-ui, sans-serif;
+  --font-mono:  var(--font-orbitron), monospace;
+  --font-manrope: var(--font-manrope), sans-serif;
 
   /* Transitions */
   --ease: cubic-bezier(.4, 0, .2, 1);
@@ -532,7 +533,16 @@ body {
 .team-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
 .team-accent { width: 3px; border-radius: 2px; flex-shrink: 0; }
 .team-name-t { font-size: 12px; font-weight: 600; flex: 1; }
-.team-logo   { width: 40px; height: 24px; object-fit: contain; margin-left: auto; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); background: rgba(255,255,255,0.05); border-radius: 2px; }
+.team-logo   { 
+  width: 44px; 
+  height: 28px; 
+  object-fit: contain; 
+  margin-left: auto; 
+  padding: 3px;
+  background: white; 
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
 .team-note   { font-size: 11px; color: var(--text-2); padding-left: 11px; line-height: 1.5; }
 
 /* Bullet list */
@@ -644,6 +654,7 @@ body {
   --text-1:     #1a1a2e;
   --text-2:     #4a4a68;
   --text-3:     #7878a0;
+  --recap-accent: #008f7a;
 }
 .light .card {
   background: rgba(255, 255, 255, 0.8);

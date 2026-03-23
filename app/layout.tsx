@@ -2,6 +2,12 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import AppShell from '@/components/layout/AppShell';
+import { Inter, Orbitron, Rajdhani, Manrope } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const orbitron = Orbitron({ subsets: ['latin'], weight: ['600', '700', '900'], variable: '--font-orbitron', display: 'swap' });
+const rajdhani = Rajdhani({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-rajdhani', display: 'swap' });
+const manrope = Manrope({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-manrope', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'F1 Performance Hub · 2026',
@@ -34,14 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${orbitron.variable} ${rajdhani.variable} ${manrope.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;700&family=Manrope:wght@700;800&display=swap"
-        />
         <link rel="icon" href="/hero-car.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#e10600" />

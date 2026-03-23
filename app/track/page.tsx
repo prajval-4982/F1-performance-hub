@@ -4,21 +4,29 @@ import { useState, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { TRACKS, type Segment } from '@/data/tracks';
 import { TEAMS_LIST } from '@/lib/constants';
+import dynamic from 'next/dynamic';
 import TrackSVG from '@/components/track/TrackSVG';
 import SegmentDetail from '@/components/track/SegmentDetail';
 import DominanceList from '@/components/track/DominanceList';
 import SpeedChart from '@/components/track/SpeedChart';
 
+const SpeedTrailArt = dynamic(() => import('@/components/track/SpeedTrailArt'), {
+    ssr: false,
+    loading: () => <div className="card" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a' }}>
+        <p className="sub-label">Initializing Speed Signature...</p>
+    </div>
+});
+
 const TRACK_PILLS = [
-    { id: 'monza', label: '🇮🇹 Monza' },
-    { id: 'suzuka', label: '🇯🇵 Suzuka' },
-    { id: 'china', label: '🇨🇳 Shanghai' },
     { id: 'australia', label: '🇦🇺 Albert Park' },
-    { id: 'silverstone', label: '🇬🇧 Silverstone' },
-    { id: 'monaco', label: '🇲🇨 Monaco' },
+    { id: 'china', label: '🇨🇳 Shanghai' },
+    { id: 'suzuka', label: '🇯🇵 Suzuka' },
     { id: 'bahrain', label: '🇧🇭 Bahrain' },
+    { id: 'monaco', label: '🇲🇨 Monaco' },
+    { id: 'silverstone', label: '🇬🇧 Silverstone' },
     { id: 'spa', label: '🇧🇪 Spa' },
     { id: 'zandvoort', label: '🇳🇱 Zandvoort' },
+    { id: 'monza', label: '🇮🇹 Monza' },
     { id: 'interlagos', label: '🇧🇷 Interlagos' },
 ];
 
@@ -32,7 +40,7 @@ export default function TrackPage() {
 
 function TrackContent() {
     const searchParams = useSearchParams();
-    const initialId = searchParams.get('id') || 'monza';
+    const initialId = searchParams.get('id') || 'australia';
     
     const [trackId, setTrackId] = useState(initialId);
     const [selectedSeg, setSelectedSeg] = useState<Segment | null>(null);
@@ -47,7 +55,7 @@ function TrackContent() {
     }, [searchParams]);
 
     const activeSeg = hoveredSeg || selectedSeg;
-    const track = TRACK_PILLS.some(t => t.id === trackId) ? TRACKS[trackId] : TRACKS['monza'];
+    const track = TRACK_PILLS.some(t => t.id === trackId) ? TRACKS[trackId] : TRACKS['australia'];
 
     function handleTrackChange(id: string) {
         setTrackId(id);
@@ -74,8 +82,10 @@ function TrackContent() {
                     </button>
                 ))}
                 <div className="spacer" />
-                <span className="type-tag straight-tag">▬ Straight</span>
-                <span className="type-tag corner-tag">⌒ Corner</span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    <span className="type-tag straight-tag">▬ Straight</span>
+                    <span className="type-tag corner-tag">⌒ Corner</span>
+                </div>
             </div>
 
             <div className="grid-2col">
@@ -110,13 +120,15 @@ function TrackContent() {
                     />
                 </div>
             </div>
-
             <div className="card chart-wrap">
                 <p className="sec-label">Speed profile — all segments (km/h)</p>
                 <div className="chart-scroll">
                     <SpeedChart track={track} />
                 </div>
             </div>
+
+            <SpeedTrailArt track={track} />
+
             <p className="footnote">Telemetry from FastF1 · github.com/theOehrly/Fast-F1 · 2024 season data</p>
         </section>
     );
